@@ -7,12 +7,9 @@ const SignInForm = () => {
   const [message, setMessage] = useState("");
 
   const handleProtectedRoute = async () => {
-    const token = localStorage.getItem("token");
     try {
       const response = await axios.get("http://localhost:3001/protected", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        withCredentials: true, //makes sure cookies are set correctly
       });
       console.log("Protected route response:", response.data);
     } catch (error) {
@@ -30,15 +27,19 @@ const SignInForm = () => {
 
     try {
       // include in the fetch CSRF token from the backend.
-      const response = await axios.post("http://localhost:3001/login", {
-        username,
-        password,
-      });
-      //get the token from the response and store it in local storage
-      const { token } = response.data;
-      localStorage.setItem("token", token);
+      const response = await axios.post(
+        "http://localhost:3001/login",
+        {
+          username,
+          password,
+        },
+        {
+          withCredentials: true, //makes sure cookies are set correctly
+        }
+      );
+
       setMessage(`Login Successful!`);
-      console.log("Login successful: here's the jwt token ->", response.data);
+      console.log("Login successful: here's the jwt token ->", response.data); // remove this later
       await handleProtectedRoute();
     } catch (error) {
       setMessage("Login failed. Please check your credentials.");
