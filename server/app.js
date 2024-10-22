@@ -8,7 +8,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const app = express();
 const secretKey = process.env.JWT_SECRET;
-import helmet from "helmet";
+const helmet = require("helmet");
 
 // rate limiter entries
 const limiter = rateLimit({
@@ -18,7 +18,7 @@ const limiter = rateLimit({
   message: "Too many requests, please try again later",
 });
 
-const allowedOrigin = "http://localhost:3000";
+const allowedOrigin = "http://localhost:3001";
 // implement cors(CSRF) protection
 app.use(
   cors({
@@ -84,7 +84,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/protected", (req, res) => {
-  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+  const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
