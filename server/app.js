@@ -4,7 +4,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 require("dotenv").config();
-
+const bcrypt = require("bcrypt");
 const app = express();
 const secretKey = process.env.JWT_SECRET;
 
@@ -16,8 +16,15 @@ const limiter = rateLimit({
   message: "Too many requests, please try again later",
 });
 
+const allowedOrigin = "http://localhost:3000";
 // implement cors(CSRF) protection
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigin, // allowing the frontend on localhost:3000
+    methods: "GET, POST", // allowing these methods
+    credentials: true, // alowing credentials
+  })
+);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(limiter);
@@ -33,21 +40,30 @@ const users = [
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
+  // Log the incoming login request data
+  console.log(
+    `Login attempt: { username: ${username}, password: ${password} }`
+  );
+
   // looking for the user
   const user = users.find(
     (u) => u.username === username && u.password === password
   );
-  //
+
   if (!user || user.password !== password) {
+    console.log("Invalid credentials");
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
   if (user) {
+    console.log("User authenticated successfully, generating token...");
     const token = jwt.sign(
       { id: user.id, username: user.username },
       secretKey,
       { expiresIn: "1h" }
     ); //add token expiration
+    console.log("User authenticated successfully, generating token...");
+    console.log(`Generated JWT token: ${token}`);
 
     res.json({ token });
   } else {
