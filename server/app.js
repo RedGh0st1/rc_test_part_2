@@ -8,6 +8,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const app = express();
 const secretKey = process.env.JWT_SECRET;
+import helmet from "helmet";
 
 // rate limiter entries
 const limiter = rateLimit({
@@ -30,7 +31,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(limiter);
 app.use(cookieParser());
-
+app.use(helmet());
 const users = [
   {
     id: 1,
