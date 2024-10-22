@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const logger = require("morgan");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const app = express();
@@ -28,6 +29,7 @@ app.use(
 app.use(logger("dev"));
 app.use(express.json());
 app.use(limiter);
+app.use(cookieParser());
 
 const users = [
   {
@@ -65,6 +67,15 @@ app.post("/login", async (req, res) => {
     console.log("User authenticated successfully, generating token...");
     console.log(`Generated JWT token: ${token}`);
 
+    //HTTPonly.cookie
+    res.cookie("token", token, {
+      httpOnly: true, // Prevents access via Javascript
+      secure: true, // ensure that cookies is sent over https
+      sameSite: "strict", // add csrf protection
+      maxAge: 3600000, // 1 hr
+    });
+
+    console.log("Token set as a cookie");
     res.json({ token });
   } else {
     res.status(401).json({ message: "Invalid credentials" });
@@ -72,8 +83,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/protected", (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
