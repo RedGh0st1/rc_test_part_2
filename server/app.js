@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const app = express();
 const secretKey = process.env.JWT_SECRET;
 const helmet = require("helmet");
@@ -36,7 +37,7 @@ const users = [
   {
     id: 1,
     username: "admin",
-    password: "password",
+    password: bcrypt.hashSync("password", saltRounds),
   },
 ];
 
@@ -44,11 +45,15 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   // looking for the user
-  const user = users.find(
-    (u) => u.username === username && u.password === password
-  );
+  const user = users.find((u) => u.username === username);
 
-  if (!user || user.password !== password) {
+  if (!user) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  isValidPassword = bcrypt.compareSync(password, user.password);
+
+  if (!isValidPassword) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
