@@ -18,7 +18,7 @@ const limiter = rateLimit({
   message: "Too many requests, please try again later",
 });
 
-const allowedOrigin = "http://localhost:3001";
+const allowedOrigin = "http://localhost:3000";
 // implement cors(CSRF) protection
 app.use(
   cors({
