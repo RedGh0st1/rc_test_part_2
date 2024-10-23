@@ -10,6 +10,7 @@ const saltRounds = 10;
 const app = express();
 const secretKey = process.env.JWT_SECRET;
 const helmet = require("helmet");
+const expirationTime = "1h";
 
 // rate limiter entries
 const limiter = rateLimit({
@@ -61,7 +62,7 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user.id, username: user.username },
       secretKey,
-      { expiresIn: "1h" }
+      { expiresIn: expirationTime }
     ); //add token expiration
 
     //HTTPonly.cookie
