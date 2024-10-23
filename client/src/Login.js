@@ -12,7 +12,6 @@ const SignInForm = () => {
       const response = await axios.get("http://localhost:3001/protected", {
         withCredentials: true, //makes sure cookies are set correctly
       });
-      console.log("Protected route response:", response.data);
     } catch (error) {
       console.error("Error accessing protected route:", error);
       setIsLoggedIn(false);
@@ -34,7 +33,6 @@ const SignInForm = () => {
     }
 
     try {
-      // include in the fetch CSRF token from the backend.
       const response = await axios.post(
         "http://localhost:3001/login",
         {
