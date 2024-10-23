@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const SignInForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleProtectedRoute = async () => {
     try {
@@ -14,12 +15,19 @@ const SignInForm = () => {
       console.log("Protected route response:", response.data);
     } catch (error) {
       console.error("Error accessing protected route:", error);
+      setIsLoggedIn(false);
     }
   };
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      handleProtectedRoute();
+    }
+  }, [isLoggedIn]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //  Add validation on the username and password fields.
+    //  validation on the username and password fields.
     if (!username || !password) {
       setMessage("Please enter correct username and password.");
       return;
@@ -40,7 +48,7 @@ const SignInForm = () => {
 
       setMessage(`Login Successful!`);
       console.log("Login successful: here's the jwt token ->", response.data); // remove this later
-      await handleProtectedRoute();
+      setIsLoggedIn(true);
     } catch (error) {
       setMessage("Login failed. Please check your credentials.");
       console.error("Error logging in:", error);
