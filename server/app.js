@@ -43,30 +43,21 @@ const users = [
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
-  // Log the incoming login request data
-  console.log(
-    `Login attempt: { username: ${username}, password: ${password} }`
-  );
-
   // looking for the user
   const user = users.find(
     (u) => u.username === username && u.password === password
   );
 
   if (!user || user.password !== password) {
-    console.log("Invalid credentials");
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
   if (user) {
-    console.log("User authenticated successfully, generating token...");
     const token = jwt.sign(
       { id: user.id, username: user.username },
       secretKey,
       { expiresIn: "1h" }
     ); //add token expiration
-    console.log("User authenticated successfully, generating token...");
-    console.log(`Generated JWT token: ${token}`);
 
     //HTTPonly.cookie
     res.cookie("token", token, {
@@ -76,7 +67,6 @@ app.post("/login", async (req, res) => {
       maxAge: 3600000, // 1 hr
     });
 
-    console.log("Token set as a cookie");
     res.json({ token });
   } else {
     res.status(401).json({ message: "Invalid credentials" });
