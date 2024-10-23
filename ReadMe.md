@@ -36,9 +36,45 @@ Once running, both the client and server will be available:
 Visit http://localhost:3000 to see the React app.\
 Visit http://localhost:3001/testing to view the server app.\
 
-Your task: Secure the application and make sure the JWT token is working as intended for both Frontend and backend.
+# JWT Authentication Vulnerability
 
-Please refer to the documentation here
-[Click here for the project explanation](https://docs.google.com/document/d/1O0_NXUNg1DCVsgmcZxPbaTT08gDkOI6q_6iVAACAjq4/edit?usp=sharing)
+## Overview
 
-If you have any questions, please slack me or email me at pak@pursuit.org
+This project involves securing a React JS frontend and a Node JS backend that use JWT (JSON Web Token) for authentication. The current implementation is vulnerable to authentication bypass.
+## Objectives
+
+1. Investigate the JWT implementation.
+    
+2. Identify and fix vulnerabilities.
+    
+3. Ensure the JWT token works as intended.
+
+## Key Points
+
+- **Issue**: The JWT token can be tampered with, bypassing authentication.
+    
+- **Impact**: Significant security risk due to unauthorized access.
+    
+- **Affected**: The application and its users.
+    
+- **Research**: Explored JWT structure and potential vulnerabilities.
+    
+## Steps
+
+1. Investigate the JWT implementation.
+    
+2. Fix vulnerabilities:
+    
+    - Use strong, random secret keys.
+        
+    - Implement token expiration and rotation.
+        
+    - Validate tokens on frontend and backend.
+        
+3. Prevent future issues with regular audits and secure coding practices.
+   
+    ## Real-World Example
+
+- **GitHub (2018)**: Exposed JWT encryption key, allowing attackers to forge tokens and gain unauthorized access1.
+    
+
