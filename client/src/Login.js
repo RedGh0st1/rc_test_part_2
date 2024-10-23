@@ -12,6 +12,7 @@ const SignInForm = () => {
       const response = await axios.get("http://localhost:3001/protected", {
         withCredentials: true, //makes sure cookies are set correctly
       });
+      return response;
     } catch (error) {
       console.error("Error accessing protected route:", error);
       setIsLoggedIn(false);
