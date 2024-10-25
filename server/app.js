@@ -50,7 +50,7 @@ app.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  isValidPassword = bcrypt.compareSync(password, user.password);
+  const isValidPassword = bcrypt.compareSync(password, user.password);
 
   if (!isValidPassword) {
     return res.status(401).json({ message: "Invalid credentials" });
@@ -62,10 +62,10 @@ app.post("/login", async (req, res) => {
       secretKey,
       { expiresIn: expirationTime }
     );
-
+    console.log("Generated token:", token);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
       sameSite: "strict",
       maxAge: 3600000,
     });

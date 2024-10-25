@@ -9,9 +9,20 @@ const SignInForm = () => {
 
   const handleProtectedRoute = async () => {
     try {
+      const cookies = document.cookie.split("; ").reduce((acc, curr) => {
+        const [key, value] = curr.split("=");
+        console.log("key", key, "value", value);
+        acc[key] = value;
+        return acc;
+      }, {});
+      console.log("cookie", document.cookie);
+      const token = cookies.token;
+      console.log("token", token);
       const response = await axios.get("http://localhost:3001/protected", {
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
+      console.log("Access to protected route:", response);
       return response;
     } catch (error) {
       console.error("Error accessing protected route:", error);
@@ -48,6 +59,9 @@ const SignInForm = () => {
       setMessage(`Login Successful!`);
       console.log("Login successful: here's the jwt token ->", response.data);
       setIsLoggedIn(true);
+      setTimeout(() => {
+        console.log("Document Cookies after login:", document.cookie);
+      }, 1000);
     } catch (error) {
       setMessage("Login failed. Please check your credentials.");
       console.error("Error logging in:", error);
