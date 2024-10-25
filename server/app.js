@@ -12,21 +12,20 @@ const secretKey = process.env.JWT_SECRET;
 const helmet = require("helmet");
 const expirationTime = "1h";
 
-// rate limiter entries
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100, // Limit each IP to 100 requests per
-  standardHeaders: true, //Enable standard rate limit headers
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: true,
   message: "Too many requests, please try again later",
 });
 
 const allowedOrigin = "http://localhost:3000";
-// implement cors(CSRF) protection
+
 app.use(
   cors({
-    origin: allowedOrigin, // allowing the frontend on localhost:3000
-    methods: "GET, POST", // allowing these methods
-    credentials: true, // alowing credentials
+    origin: allowedOrigin,
+    methods: "GET, POST",
+    credentials: true,
   })
 );
 app.use(logger("dev"));
@@ -45,7 +44,6 @@ const users = [
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
-  // looking for the user
   const user = users.find((u) => u.username === username);
 
   if (!user) {
@@ -63,14 +61,13 @@ app.post("/login", async (req, res) => {
       { id: user.id, username: user.username },
       secretKey,
       { expiresIn: expirationTime }
-    ); //add token expiration
+    );
 
-    //HTTPonly.cookie
     res.cookie("token", token, {
-      httpOnly: true, // Prevents access via Javascript
-      secure: true, // ensure that cookies is sent over https
-      sameSite: "strict", // add csrf protection
-      maxAge: 3600000, // 1 hr
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 3600000,
     });
 
     res.json({ token });

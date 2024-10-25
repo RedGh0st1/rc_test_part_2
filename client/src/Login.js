@@ -10,7 +10,7 @@ const SignInForm = () => {
   const handleProtectedRoute = async () => {
     try {
       const response = await axios.get("http://localhost:3001/protected", {
-        withCredentials: true, //makes sure cookies are set correctly
+        withCredentials: true,
       });
       return response;
     } catch (error) {
@@ -27,7 +27,7 @@ const SignInForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //  validation on the username and password fields.
+
     if (!username || !password) {
       setMessage("Please enter correct username and password.");
       return;
@@ -41,12 +41,12 @@ const SignInForm = () => {
           password,
         },
         {
-          withCredentials: true, //makes sure cookies are set correctly
+          withCredentials: true,
         }
       );
 
       setMessage(`Login Successful!`);
-      console.log("Login successful: here's the jwt token ->", response.data); // remove this later
+      console.log("Login successful: here's the jwt token ->", response.data);
       setIsLoggedIn(true);
     } catch (error) {
       setMessage("Login failed. Please check your credentials.");
