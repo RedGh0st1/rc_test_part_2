@@ -11,21 +11,20 @@ const SignInForm = () => {
     try {
       const cookies = document.cookie.split("; ").reduce((acc, curr) => {
         const [key, value] = curr.split("=");
-        console.log("key", key, "value", value);
         acc[key] = value;
         return acc;
       }, {});
-      console.log("cookie", document.cookie);
+
       const token = cookies.token;
-      console.log("token", token);
+
       const response = await axios.get("http://localhost:3001/protected", {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
-      console.log("Access to protected route:", response);
+      // console.log("Access to protected route:", response);
       return response;
     } catch (error) {
-      console.error("Error accessing protected route:", error);
+      // console.error("Error accessing protected route:", error);
       setIsLoggedIn(false);
     }
   };
