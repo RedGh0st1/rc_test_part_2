@@ -43,6 +43,11 @@ const SignInForm = () => {
       return;
     }
 
+    if (!/^[A-Za-z0-9]+$/.test(username)) {
+      setMessage("Username contains invalid characters.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:3001/login",
