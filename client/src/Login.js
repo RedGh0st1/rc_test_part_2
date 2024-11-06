@@ -21,10 +21,8 @@ const SignInForm = () => {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
-      // console.log("Access to protected route:", response);
       return response;
     } catch (error) {
-      // console.error("Error accessing protected route:", error);
       setIsLoggedIn(false);
     }
   };

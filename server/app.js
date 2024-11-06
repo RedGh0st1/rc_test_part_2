@@ -14,7 +14,7 @@ const expirationTime = "1h";
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: 4,
   standardHeaders: true,
   message: "Too many requests, please try again later",
 });
